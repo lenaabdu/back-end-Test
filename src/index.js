@@ -21,7 +21,7 @@ cors_proxy.createServer({
 }).listen(port, host, function() {
     console.log('Running CORS Anywhere on ' + host + ':' + port);
 });
-var host = process.env.HOST || '0.0.0.0';
+
 mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://lena:lena@cluster0.rqupx.mongodb.net/auth?retryWrites=true&w=majority',
  {
 
