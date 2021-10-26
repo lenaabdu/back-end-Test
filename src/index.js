@@ -34,17 +34,25 @@ app.use(bodyParser.json());
 
 // enabling CORS for all requests
 app.use(cors());
-
+app.use(cors({ origin: "https://git.heroku.com/booking-app-ap.git", credentials: true }))
 // adding morgan to log HTTP requests
 app.use(morgan('combined'));
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", '*');
-    res.header("Access-Control-Allow-Credentials", true);
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
-    next();
-});
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*")
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested, Content-Type, Accept Authorization"
+    )
+    if (req.method === "OPTIONS") {
+      res.header(
+        "Access-Control-Allow-Methods",
+        "POST, PUT, PATCH, GET, DELETE"
+      )
+      return res.status(200).json({})
+    }
+    next()
+  });
 
 app.post('/register', async(req, res) => {
     const newUser= req.body;
