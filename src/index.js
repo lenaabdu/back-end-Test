@@ -136,10 +136,7 @@ app.put('/:id', async(req, res) => {
     await Ad.findOneAndUpdate({ _id: ObjectId(req.params.id) }, req.body)
     res.send({ message: 'Ad updated.' });
 });
-app.post('/logout', (req, res) => {
-   
-    res.send({token:""})
-  });
+
  
  
 // starting the server
