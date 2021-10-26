@@ -77,6 +77,9 @@ const fileStorageEngine = multer.diskStorage({
 
 
 
+
+
+
 app.post('/auth', async(req, res) => {
     const user = await users.findOne({ username: req.body.username })
     if (!user) {
@@ -121,7 +124,8 @@ app.put('/:id', async(req, res) => {
     res.send({ message: 'Ad updated.' });
 });
 app.post('/logout', (req, res) => {
-    res.cookie('token', '').send();
+   
+    res.send({token:""})
   });
  
  
