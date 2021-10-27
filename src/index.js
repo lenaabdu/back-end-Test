@@ -24,7 +24,7 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://lena:lena@cluster0.rqup
 
 // defining the Express app
 const app = express();
-const port = process.env.PORT || 7000
+const port = process.env.PORT || 7005
 
 // adding Helmet to enhance your API's security
 app.use(helmet());
@@ -33,25 +33,15 @@ app.use(helmet());
 app.use(bodyParser.json());
 
 // enabling CORS for all requests
-app.use(express.json());
-//app.use(cors());
-const corsOptions ={
-    origin:'http://localhost:3000', 
-    credentials:true,            //access-control-allow-credentials:true
-    optionSuccessStatus:200
-}
-app.use(cors(corsOptions));
-//app.use(cors({ origin: "https://git.heroku.com/booking-app-ap.git", credentials: true }));
+app.use(cors());
+
 // adding morgan to log HTTP requests
 app.use(morgan('combined'));
 
-app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE, OPTIONS');
-    next();
-});
 
+app.get('/register', async(req, res) => {
+    res.send(await users.find());
+});
 
 app.post('/register', async(req, res) => {
     const newUser= req.body;
@@ -61,7 +51,6 @@ app.post('/register', async(req, res) => {
    await user.save()
    res.send({ token: user.token })
 });
-
 
 // Storage Engin That Tells/Configures Multer for where (destination) and how (filename) to save/upload our files
 const fileStorageEngine = multer.diskStorage({
@@ -84,9 +73,6 @@ const fileStorageEngine = multer.diskStorage({
     console.log(req.file);
     res.send("Single FIle upload success");
   });
-
-
-
 
 
 
@@ -136,7 +122,9 @@ app.put('/:id', async(req, res) => {
     await Ad.findOneAndUpdate({ _id: ObjectId(req.params.id) }, req.body)
     res.send({ message: 'Ad updated.' });
 });
-
+app.post('/logout', (req, res) => {
+    res.cookie('token', '').send();
+  });
  
  
 // starting the server
